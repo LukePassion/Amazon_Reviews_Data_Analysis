@@ -1,0 +1,26 @@
+#3. Avaliação de Desempenho por Período, analisando como são as resenhas ao longo do tempo
+from pyspark.sql.functions import col, to_timestamp, date_format, year, month
+
+#Vamos converter a coluna "Review Date" para formato de data
+df_performance = valid_data.withColumn("Review_Date", F.to_timestamp(F.col("Review Date"), "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"))
+
+#Garantir que a nova coluna contém apenas a data no formato "yyy-MM-dd"
+df_performance = df_performance.withColumn("Review_Date", date_format(col("Review_Date"), "yyyy-MM-dd"))
+
+#Adicionar colunas de período (Ano e mês)
+df_performance = df_performance.withColumn("Year", year(F.col("Review_Date")))
+df_performance = df_performance.withColumn("Month", month(F.col("Review_Date")))
+
+#3.1 Tendência temporal do número de resenhas
+reviews_over_time = df_performance.groupBy("Year", "Month").count().orderBy("Year","Month")
+reviews_over_time.display()
+
+#3.2 Tendência da média de Ratings por período(A coluna "Numric_Rating" deve estar presente)
+df_performance = df_performance.withColumn("Numeric_Rating", F.regexp_extract(F.col("Rating"), r"^Rated (\d+)", 1).cast("int"))
+
+average_rating_over_time = df_performance.groupBy("Year", "Month").agg(F.avg("Numeric_Rating").alias("Average_Rating")).orderBy("Year", "Month")
+average_rating_over_time.display()
+
+#3.3 Distribuição de ratings por data
+ratings_distribution = df_performance.groupBy("Year", "Month", "Numeric_Rating").count().orderBy("Year", "Month", "Numeric_Rating")
+ratings_distribution.display()
