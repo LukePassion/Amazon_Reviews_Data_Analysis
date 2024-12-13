@@ -1,0 +1,15 @@
+*Analisando por categoria de comprimento
+
+Length_Category	count|
+Long	          13564|
+Medium	        5817 |
+Short	          1674 |
+----------------------
+
+*Identificar a relação entre o comprimento das resenhas e os ratings atribuidos
+
+Length_Category	Average_Rating|
+Medium	        2.99          |
+Long	          1.63          |
+Short	          3.84          |
+-------------------------------
