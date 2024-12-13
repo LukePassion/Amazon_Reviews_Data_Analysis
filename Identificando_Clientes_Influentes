@@ -1,0 +1,13 @@
+#4.Identificação de Clientes Influentes
+#Contar o número de resenhas por cliente
+top_reviewers = valid_data.groupBy("Reviewer Name").count().orderBy(F.desc("count"))
+top_reviewers.limit(10).display()
+
+#Encontrar a distribuição geográfica de clientes
+influential_customers = top_reviewers.join(valid_data, on="Reviewer Name", how="inner").select(
+  "Reviewer Name", "Country", "count"
+).groupBy("Country").agg(
+  F.countDistinct("Reviewer Name").alias("Unique_Influencers"),
+  F.sum("count").alias("Total_Reviews")
+).orderBy(F.desc("Unique_Influencers"))
+influential_customers.display()
