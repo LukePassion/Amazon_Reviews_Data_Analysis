@@ -1,0 +1,31 @@
+#5.Qualidade e Relevância das Avaliações(Para entender como as avaliações contribuem para a percepção geral dos serviços da Amazon.)
+
+#5.1 - Comprimento das resenhas.(Avaliar a extensão das resenhas para identificar tendências entre resenhas curtas e detalhadas.)
+#Criando uma nova coluna para o comprimento das rsenhas
+df_quality = valid_data.withColumn("Review_Length", F.length(F.col("Review Text")))
+
+#Criar a coluna "Lenght_Category" no dataframe baseado em valid_data
+df_quality = df_quality.withColumn(
+  "Length_Category",
+  F.when(F.col("Review_Length") < 50, "Short")
+    .when((F.col("Review_Length") >= 50) & (F.col("Review_Length") <= 200), "Medium")
+    .otherwise("Long")
+  )
+
+df_quality = df_quality.withColumn(
+  "Numeric_Rating", F.regexp_extract(F.col("Rating"), r"^Rated (\d+)", 1).cast("int")
+)
+#Analisar a distribuição por categoria de comprimento
+length_categories = (
+  df_quality.groupBy("Length_Category")
+  .count()
+  .orderBy(F.desc("count"))
+)
+length_categories.display()
+
+#5.2 - Identificar a correlação entre o comprimento das resenhas e os ratings atribuídos
+average_rating_by_length = (
+  df_quality.groupBy("Length_Category")
+  .agg(F.avg("Numeric_Rating").alias("Average_Rating"))
+)
+average_rating_by_length.display()
