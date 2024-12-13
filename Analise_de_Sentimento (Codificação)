@@ -1,0 +1,20 @@
+#2.Análise de Sentimento
+from pyspark.sql.types import IntegerType
+
+# Vamos extrair o número da string "Rating" e converte-lo para int
+df_sentiment = valid_data.withColumn(
+    "Numeric_Rating",
+    F.regexp_extract(F.col("Rating"), r"^Rated (\d+)", 1).cast(IntegerType())
+)
+
+# Criar a coluna "Sentiment" com base no valor numérico do Rating
+df_sentiment = df_sentiment.withColumn(
+    "Sentiment",
+    F.when(F.col("Numeric_Rating") >= 4, "Positive")  # Notas 4 e 5
+     .when((F.col("Numeric_Rating") >= 3) & (F.col("Numeric_Rating") < 4), "Neutral")  # Nota 3
+     .when(F.col("Numeric_Rating") < 3, "Negative")  # Notas 1 e 2
+     .otherwise(None)  # Para valores nulos ou inesperados
+)
+
+# Contar os valores em cada categoria
+df_sentiment.groupBy("Sentiment").count().display()
