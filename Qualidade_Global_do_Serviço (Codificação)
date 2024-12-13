@@ -1,0 +1,25 @@
+#6. Qualidade Global do Serviço
+#Distribuição dos ratings
+ratings_distribution = valid_data.groupBy("Rating").count().orderBy(F.col("count"))
+ratings_distribution = ratings_distribution.withColumnRenamed("count", "Total_Reviews")
+ratings_distribution.display()
+
+#6.1 Classificação Geral (Converter Ratings para numéricos)
+valid_data = valid_data.withColumn(
+  "Numeric_Rating", F.regexp_extract(F.col("Rating"), r"^Rated (\d+)", 1).cast("int")
+)
+
+#Calcular a média geral do Rating
+overall_rating = valid_data.agg(F.avg("Numeric_Rating").alias("Average_Global_Rating")).collect()[0]["Average_Global_Rating"]
+
+#Criar uma classificação baseada na média geral
+if overall_rating >= 4.0:
+  global_quality = "Excelente"
+elif 3.0 <= overall_rating < 4.0:
+  global_quality = "Boa"
+elif 2.0 <= overall_rating < 3.0:
+  global_quality = "Regular"
+else:
+  global_quality = "Ruim"
+
+print(f"A qualidade global do serviço é classificada como: {global_quality} com uma média de rating de {overall_rating:.2f}.")       
