@@ -1,0 +1,13 @@
+#1.Análise Demográfica e Geográfica
+
+#1.2Contagem de avaliações por país
+country_reviews = valid_data.groupBy("Country").agg(F.count("*").alias("Review Count")).orderBy(F.desc("Review Count"))
+country_reviews.display()
+
+#10 países com mais avaliações
+top_10_countries = valid_data.groupBy("Country").agg(F.count("*").alias("Review Count")).orderBy(F.desc("Review Count")).limit(10)
+top_10_countries.display()
+
+# Classificar países em grupos por volume de avaliações
+country_groups = valid_data.groupBy("Country").agg(F.count("*").alias("Review_Count")).withColumn("Group",F.when(F.col("Review_Count") >= 1000, "High Volume").when(F.col("Review_Count") >= 100, "Medium Volume").otherwise("Low Volume"))
+country_groups.groupBy("Group").count().display()
