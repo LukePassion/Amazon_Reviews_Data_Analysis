@@ -1,0 +1,34 @@
+*Número de resenhas por cliente
+
+Reviewer    Name count|
+customer    72        |
+Customer    60        |
+David	      47        |
+John	      41        |
+Consumer    37        |
+Mark	      35        |
+James	      34        |
+Mike	      32        |
+Paul	      29        |
+Michael	    28        |
+-----------------------
+
+*Encontrando a distribuição geográfica por cliente
+
+Country	Unique_Influencers	Total_Reviews|
+US	    8392	              23435        |
+GB	    6435	              23835        |
+CA	    694	                1644         |
+IN	    624	                716          |
+DK	    236	                460          |
+IE	    235	                879          |
+NL	    210	                496          |
+AU	    183	                548          |
+DE	    176	                441          |
+IT	    149	                407          |
+FR	    111	                221          |
+ES	     94	                169          |
+SE	     93	                258          |
+AE	     89	                153          |
+PK	     71	                87           |
+------------------------------------------
