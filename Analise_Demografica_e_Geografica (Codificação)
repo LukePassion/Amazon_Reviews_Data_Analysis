@@ -11,3 +11,16 @@ top_10_countries.display()
 # Classificar países em grupos por volume de avaliações
 country_groups = valid_data.groupBy("Country").agg(F.count("*").alias("Review_Count")).withColumn("Group",F.when(F.col("Review_Count") >= 1000, "High Volume").when(F.col("Review_Count") >= 100, "Medium Volume").otherwise("Low Volume"))
 country_groups.groupBy("Group").count().display()
+
+# Identificar os países pertencentes a cada grupo
+# Países com High Volume
+high_volume_countries = country_groups.filter(F.col("Group") == "High Volume").select("Country", "Review_Count")
+high_volume_countries.display()
+
+# Países com Medium Volume
+medium_volume_countries = country_groups.filter(F.col("Group") == "Medium Volume").select("Country", "Review_Count")
+medium_volume_countries.display()
+
+# Países com Low Volume
+low_volume_countries = country_groups.filter(F.col("Group") == "Low Volume").select("Country", "Review_Count")
+low_volume_countries.display()
