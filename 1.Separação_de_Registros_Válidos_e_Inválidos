@@ -1,0 +1,9 @@
+from pyspark.sql import functions as F
+
+valid_data = df.filter(F.col("Country").rlike("^[A-Za-z]{2,}$"))
+
+# Separar registros inválidos
+invalid_data = df.filter(~F.col("Country").rlike("^[A-Za-z]{2,}$"))
+
+valid_data.display()
+invalid_data.display()
